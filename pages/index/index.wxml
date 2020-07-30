@@ -1,0 +1,140 @@
+<view>
+	<!--当前州-->
+	<view class="current_state" hover-class="click_once" bind:tap='onChangeState'>
+		{{currentStateName}}
+		<image class='icon_down' src='/images/icon-down-green.png'></image>
+	</view>
+
+	<!--选项列表-->
+	<view class="state_list{{isShowingStateList ? ' state_list_show' : ' state_list_hide'}}">
+		<view wx:for="{{statesToChoose}}" wx:key="code" catch:tap="onSelectState" data-index="{{index}}" class="state_item" hover-class="click_once">
+			{{item.name}}
+		</view>
+	</view>
+
+
+	<view class="container scroll_view" scroll-y="true" scroll-with-animation="true">
+		<view style="text-align:center; padding-top:20rpx; margin-bottom:-50rpx; font-weight:bold">
+			<view>最近30天每日新增</view>
+		</view>
+
+		<!--柱状图-->
+		<view class="chart" hidden="{{isShowingStateList || isShowingDialog}}" style="margin-bottom:-20rpx;" catch:tap='onShowDialog'>
+			<ec-canvas id="canvas" canvas-id="canvas" ec="{{ec}}">
+			</ec-canvas>
+		</view>
+
+		<!--数据来源-->
+		<!-- 引入第三方图标库中的问号图标
+		https://www.cnblogs.com/wisewrong/p/8926849.html
+		https://www.iconfont.cn/
+		用github账号登录图标库 -->
+		<view style="margin-bottom: 10rpx; text-align:center; font-size: 28rpx; color:#576b95" class="iconfont icon-xiaochengxu_tubiao" catch:tap='onShowDialog'>
+			数据来源于澳大利亚各州领地卫生局
+		</view>
+		
+		<!--每日新增列表-->
+		<view class='data_row'>
+			<view class='data_coloum'>
+				日期
+			</view>
+			<view class='data_coloum'>
+				新增确诊
+			</view>
+		</view>
+		<view wx:for="{{stateData}}" wx:key="date" data-index="{{index}}">
+			<view class='data_row'>
+				<view class='data_coloum' style="color: {{index == 0 ? latestColor : '#888888'}}">
+					{{item.date}}
+				</view>
+				<view class='data_coloum' style="color: {{index == 0 ? latestColor : '#888888'}}">
+					{{item.num}}
+				</view>
+			</view>
+		</view>
+	</view>
+
+	<!--数据来源对话框-->
+	<view class="dialog" hidden='{{!isShowingDialog}}'>
+		<image src='/images/close.png' class="close" bindtap='onCloseDialog'></image>
+		<view class="dialog_title">数据说明</view>
+		<view style="font-size: 32rpx; margin: 0 30rpx 15rpx 30rpx;">数据来源于澳大利亚各州领地卫生局官方发布:</view>
+
+		<view class='source_row'>
+			<view class='source_left'>
+				维多利亚州卫生局
+			</view>
+			<view class='source_right'>
+				www.dhhs.vic.gov.au
+			</view>
+		</view>
+
+		<view class='source_row'>
+			<view class='source_left'>
+				新南威尔士州卫生局
+			</view>
+			<view class='source_right'>
+				www.health.nsw.gov.au
+			</view>
+		</view>
+
+
+		<view class='source_row'>
+			<view class='source_left'>
+				昆士兰州卫生局
+			</view>
+			<view class='source_right'>
+				www.health.qld.gov.au
+			</view>
+		</view>
+
+		<view class='source_row'>
+			<view class='source_left'>
+				南澳州卫生局
+			</view>
+			<view class='source_right'>
+				www.sahealth.sa.gov.au
+			</view>
+		</view>
+
+		<view class='source_row'>
+			<view class='source_left'>
+				堪培拉卫生局
+			</view>
+			<view class='source_right'>
+				www.health.act.gov.au
+			</view>
+		</view>
+
+		<view class='source_row'>
+			<view class='source_left'>
+				塔斯马尼亚州卫生局
+			</view>
+			<view class='source_right'>
+				www.health.tas.gov.au
+			</view>
+		</view>
+
+		<view class='source_row'>
+			<view class='source_left'>
+				西澳州卫生局
+			</view>
+			<view class='source_right'>
+				ww2.health.wa.gov.au
+			</view>
+		</view>
+
+		<view class='source_row'>
+			<view class='source_left'>
+				北领地卫生局
+			</view>
+			<view class='source_right'>
+				www.health.nt.gov.au
+			</view>
+		</view>
+	</view>
+
+
+	<!-- 遮罩 -->
+	<view class="mask" hidden="{{!isShowingStateList && !isShowingDialog}}" bindtap='onTapMask'></view>
+</view>
